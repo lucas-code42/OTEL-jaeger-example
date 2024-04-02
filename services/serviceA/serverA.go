@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	serviceHttp "github.com/lucas-code42/OTEL-impl-example/pkg/http"
-	"github.com/lucas-code42/OTEL-impl-example/services/serviceA/repository"
+	"github.com/lucas-code42/OTEL-impl-example/services/serviceA/fakeRepository"
 	"go.opentelemetry.io/otel/trace"
 )
 
@@ -18,7 +18,7 @@ func RunServiceA(tracer trace.Tracer) {
 		defer span.End()
 
 		response := serviceHttp.RequestService(ctx, "8181", "serviceb", tracer)
-		repository.SimulateSQLQuery(ctx, tracer)
+		fakeRepository.SimulateSQLQuery(ctx, tracer)
 		w.Write([]byte(response))
 	})
 	http.ListenAndServe(":8080", nil)
