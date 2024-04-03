@@ -6,3 +6,6 @@ test:
 
 stop:
 	docker compose down
+
+remove:
+	docker rm -f $(docker ps -aq)

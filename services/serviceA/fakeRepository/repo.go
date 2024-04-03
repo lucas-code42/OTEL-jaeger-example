@@ -9,8 +9,9 @@ import (
 )
 
 func SimulateSQLQuery(ctx context.Context, tracer trace.Tracer) error {
-	_, span := tracer.Start(ctx, "SQL query")
+	ctx, span := tracer.Start(ctx, "query")
 	defer span.End()
+	span.SetName("query")
 
 	span.AddEvent("SQL query", trace.WithAttributes(
 		attribute.KeyValue{

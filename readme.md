@@ -17,3 +17,9 @@ To stop service:
 ```bash
 make stop
 ```
+
+## Traces: service A and service B
+![jaegerUI](Screenshot2024-04-02.png)
+
+## Spans:
+![jaegerUI](Screenshot2024-04-02(1).png)

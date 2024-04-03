@@ -5,20 +5,25 @@ import (
 	"net/http"
 
 	serviceHttp "github.com/lucas-code42/OTEL-impl-example/pkg/http"
+	"github.com/lucas-code42/OTEL-impl-example/pkg/otel"
 	"github.com/lucas-code42/OTEL-impl-example/services/serviceA/fakeRepository"
-	"go.opentelemetry.io/otel/trace"
 )
 
 const PATH = "servicea/ping"
 
-func RunServiceA(tracer trace.Tracer) {
+func RunServiceA() {
 	log.Printf("start service A")
+
 	http.HandleFunc("/"+PATH, func(w http.ResponseWriter, r *http.Request) {
-		ctx, span := tracer.Start(r.Context(), PATH)
+		tracer := otel.InitializeTracer(r.Context())
+
+		ctx, span := tracer.Start(r.Context(), "handler")
+		span.SetName("handler")
 		defer span.End()
 
-		response := serviceHttp.RequestService(ctx, "8181", "serviceb", tracer)
+		ctx, response := serviceHttp.RequestService(ctx, tracer, "8181", "serviceb")
 		fakeRepository.SimulateSQLQuery(ctx, tracer)
+
 		w.Write([]byte(response))
 	})
 	http.ListenAndServe(":8080", nil)
