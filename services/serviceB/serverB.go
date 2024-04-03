@@ -7,13 +7,12 @@ import (
 	"github.com/lucas-code42/OTEL-impl-example/pkg/otel"
 )
 
-const PATH = "serviceb/ping"
-
 func RunServiceB() {
-	log.Printf("start service B")
-	http.HandleFunc("/"+PATH, func(w http.ResponseWriter, r *http.Request) {
+	log.Printf("start service [B]")
+
+	http.HandleFunc("/serviceb/ping", func(w http.ResponseWriter, r *http.Request) {
 		tracer := otel.InitializeTracer(r.Context())
-		_, span := tracer.Start(r.Context(), PATH)
+		_, span := tracer.Start(r.Context(), "handler B")
 		span.SetName("handler B")
 		defer span.End()
 

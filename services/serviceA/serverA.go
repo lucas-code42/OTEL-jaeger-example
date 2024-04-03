@@ -9,16 +9,14 @@ import (
 	"github.com/lucas-code42/OTEL-impl-example/services/serviceA/fakeRepository"
 )
 
-const PATH = "servicea/ping"
-
 func RunServiceA() {
-	log.Printf("start service A")
+	log.Printf("start service [A]")
 
-	http.HandleFunc("/"+PATH, func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/servicea/ping", func(w http.ResponseWriter, r *http.Request) {
 		tracer := otel.InitializeTracer(r.Context())
 
-		ctx, span := tracer.Start(r.Context(), "handler")
-		span.SetName("handler")
+		ctx, span := tracer.Start(r.Context(), "handler A")
+		span.SetName("handler A")
 		defer span.End()
 
 		ctx, response := serviceHttp.RequestService(ctx, tracer, "8181", "serviceb")
