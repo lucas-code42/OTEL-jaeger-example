@@ -15,10 +15,10 @@ func RunServiceA() {
 	log.Printf("start service [A]")
 
 	http.HandleFunc("/servicea/ping", func(w http.ResponseWriter, r *http.Request) {
-		tracer := otel.InitializeTracer(r.Context(), "server-a")
+		tracer := otel.InitializeTracer(r.Context(), thisServerName)
 
-		ctx, span := tracer.Start(r.Context(), thisServerName)
-		span.SetName("handler A")
+		ctx, span := tracer.Start(r.Context(), "http.request.A")
+		// span.SetName("handler A")
 		defer span.End()
 
 		ctx, response := serviceHttp.RequestService(ctx, tracer, "8181", "serviceb")

@@ -24,9 +24,8 @@ func RequestService(
 	port string,
 	path string,
 ) (context.Context, string) {
-	ctx, span := tracer.Start(ctx, "request")
+	ctx, span := tracer.Start(ctx, "htt.ping")
 	defer span.End()
-	span.SetName("request")
 
 	url := fmt.Sprintf("http://localhost:%s/%s/ping", port, path)
 	req, err := http.NewRequest(
@@ -46,6 +45,9 @@ func RequestService(
 		},
 	))
 
+	// otel.SetTextMapPropagator(propagation.TraceContext{})
+
+	// propagator := propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{})
 	propagator := propagation.TraceContext{}
 	propagator.Inject(ctx, propagation.HeaderCarrier(req.Header))
 

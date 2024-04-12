@@ -14,12 +14,14 @@ func RunServiceB() {
 	log.Printf("start service [B]")
 
 	http.HandleFunc("/serviceb/ping", func(w http.ResponseWriter, r *http.Request) {
-		propgator := propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{})
-		ctx := propgator.Extract(r.Context(), propagation.HeaderCarrier(r.Header))
+		propagator := propagation.NewCompositeTextMapPropagator(
+			propagation.TraceContext{},
+			propagation.Baggage{},
+		)
+		ctx := propagator.Extract(r.Context(), propagation.HeaderCarrier(r.Header))
 
-		tracer := otel.InitializeTracer(r.Context(), thisServerName)
-		_, span := tracer.Start(ctx, "handler B")
-		span.SetName("handler B")
+		tracer := otel.InitializeTracer(ctx, thisServerName)
+		_, span := tracer.Start(ctx, "http.request.B")
 		defer span.End()
 
 		w.Write([]byte("service_a -> ping -> service_b"))
