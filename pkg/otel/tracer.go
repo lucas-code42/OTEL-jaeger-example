@@ -15,7 +15,7 @@ import (
 
 var errFoo = errors.New("error while creating tracer exporter")
 
-func InitializeTracer(ctx context.Context) trace.Tracer {
+func InitializeTracer(ctx context.Context, serviceName string) trace.Tracer {
 	client := otlptracehttp.NewClient(
 		otlptracehttp.WithEndpointURL(config.GetEnv("OTEL_EXPORTER_ENDPOINT")),
 	)
@@ -29,5 +29,5 @@ func InitializeTracer(ctx context.Context) trace.Tracer {
 		sdktrace.WithBatcher(exporter),
 	)
 
-	return tracerProvider.Tracer(config.GetEnv("OTEL_SERVICE_NAME"))
+	return tracerProvider.Tracer(serviceName, trace.WithInstrumentationVersion("1.0"))
 }

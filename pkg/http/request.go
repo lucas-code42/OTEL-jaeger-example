@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/trace"
 )
 
@@ -28,7 +29,6 @@ func RequestService(
 	span.SetName("request")
 
 	url := fmt.Sprintf("http://localhost:%s/%s/ping", port, path)
-	fmt.Println(url)
 	req, err := http.NewRequest(
 		http.MethodGet,
 		url,
@@ -46,8 +46,8 @@ func RequestService(
 		},
 	))
 
-	// propagator := propagation.TraceContext{}
-	// propagator.Inject(ctx, propagation.MapCarrier{"msg": "some body"})
+	propagator := propagation.TraceContext{}
+	propagator.Inject(ctx, propagation.HeaderCarrier(req.Header))
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
