@@ -45,10 +45,9 @@ func RequestService(
 		},
 	))
 
-	// otel.SetTextMapPropagator(propagation.TraceContext{})
-
-	// propagator := propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{})
-	propagator := propagation.TraceContext{}
+	propagator := propagation.NewCompositeTextMapPropagator(
+		propagation.TraceContext{}, propagation.Baggage{},
+	)
 	propagator.Inject(ctx, propagation.HeaderCarrier(req.Header))
 
 	resp, err := http.DefaultClient.Do(req)

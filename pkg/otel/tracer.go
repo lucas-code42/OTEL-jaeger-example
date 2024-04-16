@@ -39,11 +39,5 @@ func InitializeTracer(ctx context.Context, serviceName string) trace.Tracer {
 		sdktrace.WithBatcher(exporter),
 		sdktrace.WithResource(newResource(serviceName)),
 	)
-
-	// otel.SetTracerProvider(tracerProvider)
-	// otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(
-	// 	propagation.TraceContext{}, propagation.Baggage{}),
-	// )
-
 	return tracerProvider.Tracer(serviceName, trace.WithInstrumentationVersion("1.0"))
 }
